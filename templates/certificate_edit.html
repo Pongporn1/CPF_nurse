@@ -100,14 +100,6 @@
       font-size: 22px;
     }
 
-    .paper>a.save-btn {
-      text-decoration: none;
-    }
-
-    .paper>a.save-btn:hover {
-      text-decoration: none;
-    }
-
     /* ================= BASE ================= */
     body {
       font-family: 'Sarabun', sans-serif;
@@ -139,22 +131,30 @@
     }
 
     /* ================= ปุ่มกลับเมนู ================= */
-    .paper>a.save-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: #28a745;
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    
+    .top-bar{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      margin-bottom:20px;
     }
 
-    .paper>a.save-btn:hover {
-      background: #218838;
+    /* ปุ่มย้อนกลับ/กลับเมนู */
+    .back-menu-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background:#28a745;
+      color:#fff;
+      padding:10px 18px;
+      border-radius:8px;
+      text-decoration:none;
+      font-size:18px;
+      font-weight:600;
+      box-shadow:0 2px 6px rgba(0,0,0,0.2);
     }
+    .back-menu-btn:hover{ background:#218838; }
+
 
     /* ================= แถบสลับส่วน ================= */
     .tab {
@@ -431,9 +431,16 @@
   <div class="container">
 
     <div class="paper">
+    <!-- ✅ ใส่ตรงนี้: บรรทัดแรกของกล่อง paper -->
+    <div class="top-bar">
+      <!-- ถ้าต้องการกลับ "ทะเบียน" เหมือนเดิม -->
+      <a href="/medical_certificate/register" class="back-menu-btn">
+        <i class="fa-solid fa-arrow-left"></i> ย้อนกลับ
+      </a>
+
+    </div>
       <h2>แก้ไขข้อมูลใบรับรองแพทย์</h2>
 
-      <a href="/medical_certificate/register" class="save-btn">⬅ กลับทะเบียน</a>
 
       <div class="tab">
         <button onclick="showPart(1)">ส่วนที่ 1 ผู้ขอรับใบรับรอง</button>
