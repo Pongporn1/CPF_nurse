@@ -1,154 +1,285 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <title>รายการเวชภัณฑ์</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
-        .header {
-            font-size: 16px;
-        }
-
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-        }
-
-        .container {
-            font-size: 24px;
+        body{
+            font-family:'Sarabun',sans-serif;
+            background:#f4f6f8;
+            margin:0;
         }
 
         /* ================= HEADER ================= */
-        .header {
-            width: 100%;
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 14px 40px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .header{
+            width:100%;
+            background:#ffffff;
+            border-bottom:1px solid #e0e0e0;
+            padding:14px 40px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            font-size:16px;
         }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #5b2c83;
+        .header-left{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            font-size:20px;
+            font-weight:700;
+            color:#5b2c83;
         }
-
-        .header-left i {
-            font-size: 26px;
+        .header-left i{ font-size:26px; }
+        .header-right{
+            display:flex;
+            align-items:center;
+            gap:16px;
+            font-size:14px;
         }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 14px;
-        }
-
-        .logout-btn {
-            background: #ff6b6b;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
+        .logout-btn{
+            background:#ff6b6b;
+            color:#fff;
+            padding:8px 16px;
+            border-radius:6px;
+            text-decoration:none;
+            font-weight:600;
         }
 
         /* ===== container ===== */
-        .container {
-            max-width: 1500px;
-            background: #ffffff;
-            margin: 40px auto;
-            padding: 40px;
-            border-radius: 14px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-            position: relative;
+        .container{
+            max-width:1500px;
+            background:#ffffff;
+            margin:40px auto;
+            padding:40px;
+            border-radius:14px;
+            box-shadow:0 8px 25px rgba(0,0,0,0.25);
+            position:relative;
         }
 
-        /* ===== ปุ่มกลับ ===== */
-        .back-menu {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: #28a745;
-            color: #fff;
-            padding: 8px 14px;
-            font-size: 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
+        /* ===== ปุ่มย้อนกลับแบบเดียวกับหน้ารายการยา ===== */
+        .top-bar{
+        text-align:left;
+        margin-bottom:10px;
         }
 
-        .back-menu:hover {
-            background: #218838;
+        .back-menu{
+        display:inline-block;
+        background:#28a745;
+        color:#fff;
+        padding:10px 20px;
+        font-size:20px;
+        border-radius:8px;
+        text-decoration:none;
+        font-weight:600;
+        box-shadow:0 4px 10px rgba(0,0,0,0.2);
+        transition:0.2s;
+        }
+
+        .back-menu:hover{
+        background:#218838;
+        }
+
+
+        /* ===== ปุ่มเพิ่ม ===== */
+        .add-btn{
+            position:absolute;
+            top:15px;
+            right:15px;
+
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); /* ม่วง */
+            color:#fff;
+            border:none;
+
+            padding:16px 22px;        /* ใหญ่ขึ้น */
+            font-size:18px;           /* ตัวอักษรใหญ่ขึ้น */
+            border-radius:14px;       /* มนขึ้น */
+            cursor:pointer;
+            font-weight:800;
+
+            box-shadow:0 10px 22px rgba(137, 137, 137, 0.35); 
+            display:flex;
+            align-items:center;
+            gap:10px;
+
+            transition:0.2s;
+        }
+
+        .add-btn i{
+            font-size:20px;           /* ไอคอนใหญ่ขึ้น */
+        }
+
+        .add-btn:hover{
+            transform: translateY(-2px);
+            filter:brightness(0.98);
+        }
+
+        .add-btn:active{
+            transform: translateY(0px);
         }
 
         /* ===== หัวข้อ ===== */
-        h2 {
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 32px;
-            font-weight: 700;
+        h2{
+            text-align:center;
+            margin-bottom:40px;
+            font-size:32px;
+            font-weight:700;
         }
 
         /* ===== layout ===== */
-        .list-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+        .list-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+            gap:30px;
         }
 
         /* ===== การ์ดเวชภัณฑ์ ===== */
-        .box {
-            height: 120px;
-            border-radius: 16px;
-            text-decoration: none;
-            color: #03396c;
-            font-size: 24px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: linear-gradient(135deg, #2d8fe2 0%, #8fd3f4 100%);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
+        .box{
+            height:120px;
+            border-radius:16px;
+            text-decoration:none;
+            color:#03396c;
+            font-size:24px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            background:linear-gradient(135deg,#2d8fe2 0%,#8fd3f4 100%);
+            box-shadow:0 6px 18px rgba(0,0,0,0.2);
+            transition:0.3s;
+        }
+        .box:hover{
+            transform:translateY(-6px);
+            box-shadow:0 10px 25px rgba(0,0,0,0.25);
         }
 
-        .box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+
+        .card-wrap{
+            position: relative;
         }
+
+        .delete-btn{
+            position:absolute;
+            top:10px;
+            right:10px;
+            width:38px;
+            height:38px;
+            border:none;
+            border-radius:10px;
+            background:rgba(255,255,255,0.9);
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow:0 4px 10px rgba(0,0,0,0.18);
+        }
+
+        .delete-btn i{
+            color:#e11d48;
+            font-size:18px;
+        }
+
+        .delete-btn:hover{
+            filter:brightness(0.95);
+        }
+        /* ===== Modal ===== */
+        .modal{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.45);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            z-index:999;
+        }
+        .modal.show{ display:flex; }
+
+        .modal-card{
+            width:100%;
+            max-width:520px;
+            background:#fff;
+            border-radius:14px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.35);
+            padding:22px;
+        }
+        .modal-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:14px;
+        }
+        .modal-head h3{
+            margin:0;
+            font-size:20px;
+        }
+        .close-btn{
+            border:none;
+            background:#f1f1f1;
+            width:36px;
+            height:36px;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:18px;
+        }
+        .close-btn:hover{ filter:brightness(0.95); }
+
+        .form-row{ margin-top:12px; }
+        .form-row label{
+            display:block;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:6px;
+            color:#333;
+        }
+        .form-row input{
+            width:100%;
+            padding:12px 14px;
+            border:1px solid #d9d9d9;
+            border-radius:10px;
+            font-size:16px;
+            outline:none;
+        }
+        .form-row input:focus{ border-color:#3b82f6; }
+
+        .form-actions{
+            display:flex;
+            gap:10px;
+            justify-content:flex-end;
+            margin-top:16px;
+        }
+        .btn{
+            border:none;
+            padding:10px 14px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:700;
+            font-size:14px;
+        }
+        .btn-cancel{ background:#e5e7eb; }
+        .btn-save{ background:#3b82f6; color:#fff; }
 
         /* ================= FOOTER ================= */
-        .footer {
-            width: 100%;
-            background: #dcdcdc;
-            text-align: center;
-            padding: 18px;
-            font-size: 14px;
-            color: #555;
-            margin-top: 60px;
+        .footer{
+            width:100%;
+            background:#dcdcdc;
+            text-align:center;
+            padding:18px;
+            font-size:14px;
+            color:#555;
+            margin-top:60px;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="header-left">
             <i class="fa-solid fa-stethoscope"></i>
@@ -162,8 +293,15 @@
     </div>
 
     <div class="container">
+        <div class="top-bar">
+        <a href="{{ url_for('medicine_type') }}" class="back-menu">⬅ ย้อนกลับ</a>
+        </div>
 
-        <a href="/medicine_type" class="back-menu">⬅ กลับ</a>
+        {% if session.get('role') == 'admin' %}
+        <button type="button" class="add-btn" id="openAdd">
+            <i class="fa-solid fa-plus"></i> เพิ่มชื่อยา/เวชภัณฑ์
+        </button>
+        {% endif %}
 
         <h2>รายการเวชภัณฑ์</h2>
 
@@ -172,16 +310,85 @@
         {% endif %}
 
         <div class="list-grid">
-            {% for s in supplies %}
+        {% for s in supplies %}
+        <div class="card-wrap">
             <a href="/medicine/{{ s.id }}" class="box">{{ s.name }}</a>
-            {% endfor %}
+
+            {% if session.get('role') == 'admin' %}
+            <form method="POST" action="/medicine/{{ s.id }}/delete"
+                onsubmit="return confirm('ยืนยันลบเวชภัณฑ์: {{ s.name }} ?');">
+            <button type="submit" class="delete-btn" title="ลบ">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
         </div>
 
     </div>
-    <!-- ===== FOOTER ===== -->
+
+    <!-- Modal เพิ่มเวชภัณฑ์ -->
+    <div class="modal" id="addModal" aria-hidden="true">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>เพิ่มชื่อเวชภัณฑ์</h3>
+                <button type="button" class="close-btn" id="closeAdd" aria-label="close">✕</button>
+            </div>
+
+            <form method="POST" action="/supply/add">
+                <div class="form-row">
+                    <label>ชื่อเวชภัณฑ์</label>
+                    <input type="text" name="name" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" id="cancelAdd">ยกเลิก</button>
+                    <button type="submit" class="btn btn-save">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="footer">
         © 2025 Safety Officer, CPF Khon Kaen Feedmill
     </div>
-</body>
 
+    <script>
+        const openBtn = document.getElementById("openAdd");
+        const modal = document.getElementById("addModal");
+        const closeBtn = document.getElementById("closeAdd");
+        const cancelBtn = document.getElementById("cancelAdd");
+
+        function openModal(){
+            if(!modal) return;
+            modal.classList.add("show");
+            modal.setAttribute("aria-hidden", "false");
+            const input = modal.querySelector("input[name='name']");
+            if(input) input.focus();
+        }
+
+        function closeModal(){
+            if(!modal) return;
+            modal.classList.remove("show");
+            modal.setAttribute("aria-hidden", "true");
+        }
+
+        if(openBtn) openBtn.addEventListener("click", openModal);
+        if(closeBtn) closeBtn.addEventListener("click", closeModal);
+        if(cancelBtn) cancelBtn.addEventListener("click", closeModal);
+
+        // คลิกพื้นหลังให้ปิด
+        if(modal){
+            modal.addEventListener("click", (e) => {
+                if(e.target === modal) closeModal();
+            });
+        }
+
+        // กด ESC ปิด
+        document.addEventListener("keydown", (e) => {
+            if(e.key === "Escape") closeModal();
+        });
+    </script>
+</body>
 </html>
