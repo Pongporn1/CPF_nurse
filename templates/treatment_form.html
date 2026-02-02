@@ -262,6 +262,7 @@
   </div>
 
   <div class="container">
+    <!-- ปุ่มกลับเมนู -->
     <div class="top-bar">
       <a href="/menu" class="back-menu-btn">⬅ เมนู</a>
     </div>
@@ -269,6 +270,7 @@
     <h2>ทะเบียนการรักษา</h2>
 
     <form method="post">
+
       <label>วันที่เข้ารับการรักษา</label>
       <input type="date" name="visit_date" required>
 
@@ -322,8 +324,7 @@
           <option value="">-- เลือกรายการ --</option>
         </select>
 
-        <input type="text" id="medicine_other" placeholder="กรอกชื่อยา/เวชภัณฑ์"
-          style="flex:3; display:none;">
+        <input type="text" id="medicine_other" placeholder="กรอกชื่อยา/เวชภัณฑ์" style="flex:3; display:none;">
 
         <select id="lot_select" style="flex:2;">
           <option value="">Lot</option>
@@ -358,11 +359,19 @@
 
       <label style="margin-top:30px;">ความคิดเห็นของแพทย์</label>
 
-      <label style="font-weight:500;">เข้าข่ายโรคจากการประกอบอาชีพ</label>
+      <label style="font-weight:500;">
+        เข้าข่ายโรคจากการประกอบอาชีพ
+      </label>
 
       <div class="inline">
-        <label><input type="radio" name="occupational_disease" value="0" checked> ไม่เข้าข่าย</label>
-        <label><input type="radio" name="occupational_disease" value="1"> เข้าข่าย</label>
+        <label>
+          <input type="radio" name="occupational_disease" value="0" checked>
+          ไม่เข้าข่าย
+        </label>
+        <label>
+          <input type="radio" name="occupational_disease" value="1">
+          เข้าข่าย
+        </label>
       </div>
 
       <label>รายละเอียดความคิดเห็นของแพทย์</label>
@@ -371,6 +380,7 @@
       <button type="submit">💾 บันทึกทะเบียนการรักษา</button>
 
       <input type="hidden" name="medicine_json" id="medicine_json">
+
     </form>
   </div>
 
@@ -453,13 +463,11 @@
       medOther.style.display = 'none';
       medSelect.innerHTML = '<option value="">-- เลือกรายการ --</option>';
 
-      // ✅ CASE: อื่นๆ
       if (symptom.value === 'other') {
         await loadOtherItemsToSelect();
         return;
       }
 
-      // CASE ปกติ
       (medicineData[symptom.value] || []).forEach(name => {
         const opt = document.createElement('option');
         opt.value = name;
@@ -469,7 +477,7 @@
     });
 
     /* ===============================
-       LOAD LOT (แก้แล้ว: medicine/supply ยิงครั้งเดียวด้วย name)
+       LOAD LOT (✅ เรียกครั้งเดียวสำหรับ medicine/supply)
     ================================ */
     medSelect.addEventListener('change', async () => {
       lotSelect.innerHTML = '<option value="">Lot</option>';
@@ -477,37 +485,13 @@
 
       const itemType = getItemType();
 
-      // ✅ CASE: other → other_lot
+      // ✅ CASE: other → ใช้ other_lot
       if (itemType === "other") {
-        try {
-          const lotRes = await fetch(`/api/other_lots?item_name=${encodeURIComponent(medSelect.value)}`);
-          const data = await lotRes.json(); // { lots: [...] }
-
-          if (!data.lots || data.lots.length === 0) {
-            console.warn("ไม่พบ LOT ของรายการอื่นๆ:", medSelect.value);
-            return;
-          }
-
-          data.lots.forEach(lot => {
-            const opt = document.createElement('option');
-            opt.value = lot.id;
-            opt.textContent = `${lot.name} (คงเหลือ ${lot.remain})`;
-            opt.dataset.price = lot.price || 0;
-            lotSelect.appendChild(opt);
-          });
-        } catch (e) {
-          console.error("โหลด other_lots ไม่สำเร็จ", e);
-        }
-        return;
-      }
-
-      // ✅ CASE: medicine / supply → medicine_lot (ยิงครั้งเดียว)
-      try {
-        const lotRes = await fetch(`/api/medicine_lots?name=${encodeURIComponent(medSelect.value)}`);
-        const data = await lotRes.json(); // { lots: [...] }
+        const lotRes = await fetch(`/api/other_lots?item_name=${encodeURIComponent(medSelect.value)}`);
+        const data = await lotRes.json();
 
         if (!data.lots || data.lots.length === 0) {
-          console.warn("ไม่พบ LOT:", medSelect.value);
+          console.warn("ไม่พบ LOT ของรายการอื่นๆ:", medSelect.value);
           return;
         }
 
@@ -518,13 +502,29 @@
           opt.dataset.price = lot.price || 0;
           lotSelect.appendChild(opt);
         });
-      } catch (e) {
-        console.error("โหลด medicine_lots ไม่สำเร็จ", e);
+        return;
       }
+
+      // ✅ CASE: medicine / supply → เรียกครั้งเดียวด้วย name
+      const lotRes = await fetch(`/api/medicine_lots?name=${encodeURIComponent(medSelect.value)}`);
+      const data = await lotRes.json();
+
+      if (!data.lots || data.lots.length === 0) {
+        console.warn("ไม่พบ LOT:", medSelect.value);
+        return;
+      }
+
+      data.lots.forEach(lot => {
+        const opt = document.createElement('option');
+        opt.value = lot.id;
+        opt.textContent = `${lot.name} (คงเหลือ ${lot.remain})`;
+        opt.dataset.price = lot.price || 0;
+        lotSelect.appendChild(opt);
+      });
     });
 
     /* ===============================
-       ADD ITEM (ส่ง type ชัวร์ 100%)
+       ADD ITEM
     ================================ */
     function addMedicine() {
       const itemType = getItemType();
@@ -555,14 +555,16 @@
 
       const uid = Date.now() + "_" + Math.random().toString(16).slice(2);
 
-      medicines.push({
+      const obj = {
         uid,
-        type: itemType,
+        type: itemType,         // "other" / "medicine" / "supply"
         name: itemName,
         lot: selected.text,
         lot_id: lotSelect.value,
         qty: qty
-      });
+      };
+
+      medicines.push(obj);
 
       const row = table.insertRow();
       row.dataset.uid = uid;
@@ -571,7 +573,9 @@
       row.insertCell(1).innerText = selected.text;
       row.insertCell(2).innerText = qty;
       row.insertCell(3).innerText = selected.dataset.price || "-";
-      row.insertCell(4).innerHTML = `<button type="button" onclick="removeRow('${uid}')">❌</button>`;
+
+      row.insertCell(4).innerHTML =
+        `<button type="button" onclick="removeRow('${uid}')">❌</button>`;
 
       resetLotAndQty();
     }
